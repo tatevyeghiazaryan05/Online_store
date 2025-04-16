@@ -26,4 +26,11 @@ def change_user_password(data: UserPasswordChangeSchema, token=Depends(get_curre
     main.conn.commit()
     return "Password updated successfully!!"
 
-#TODO user can delete acount and can recover an acount
+
+@user_router.get("/api/users/my-account-info")
+def get_user_my_account_info(token=Depends(get_current_user)):
+    user_id = token["id"]
+    main.cursor.execute("SELECT email,name FROM users WHERE id=%s",
+                        (user_id,))
+    data = main.cursor.fetchall()
+    return data

@@ -4,8 +4,8 @@ from database import engine
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from auth import authrouter
-from drinks import drink_router
 from users import user_router
+from home_page import home_page_router
 
 from fastapi.staticfiles import StaticFiles
 
@@ -27,6 +27,5 @@ app = FastAPI()
 # app.mount("/images", StaticFiles(directory="uploads"), name="uploads")
 
 app.include_router(authrouter)
-app.include_router(drink_router)
 app.include_router(user_router)
-
+app.include_router(home_page_router)

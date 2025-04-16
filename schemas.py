@@ -12,18 +12,7 @@ class UserLoginSchema(BaseModel):
     password: str
 
 
-class DrinkSchema(BaseModel):
-    name: str
-    kind: str
-    price: float
-    image: str
-
-
 class UserNameChangeSchema(BaseModel):
-    name: str
-
-
-class DrinkNameChangeSchema(BaseModel):
     name: str
 
 
