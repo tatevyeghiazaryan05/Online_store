@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends
 import main
 from security import get_current_user, pwd_context
-from fastapi import HTTPException, status
 
 home_page_router = APIRouter()
 
@@ -68,3 +67,6 @@ def filter_drinks_by_max_price(min_price: float):
 
 
 #TODO PRICE  LIMIT DRINKS  write in one function both min_price,max_price
+
+#TODO user forgot password (not log in)
+#TODO user password recovery (log in)

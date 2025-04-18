@@ -6,7 +6,7 @@ from psycopg2.extras import RealDictCursor
 from auth import authrouter
 from users import user_router
 from home_page import home_page_router
-
+from Card_Payments import card_payments_router
 from fastapi.staticfiles import StaticFiles
 
 
@@ -29,3 +29,4 @@ app = FastAPI()
 app.include_router(authrouter)
 app.include_router(user_router)
 app.include_router(home_page_router)
+app.include_router(card_payments_router)
