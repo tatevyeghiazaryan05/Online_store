@@ -54,24 +54,30 @@ def filter_drinks_by_category(drink_category: str):
     return drinks
 
 
-@home_page_router.get("/api/home_page/filter/drinks/by/price/{max_price}")
-def filter_drinks_by_max_price(max_price: float):
-    main.cursor.execute("SELECT * FROM drinks WHERE price <= %s",
-                        (max_price,))
+@home_page_router.get("/api/home_page/filter/drinks/by/price")
+def filter_drinks_by_price(min_price: float = None, max_price: float = None):
+    if min_price is not None and max_price is not None:
+        main.cursor.execute(
+            "SELECT * FROM drinks WHERE price BETWEEN %s AND %s",
+            (min_price, max_price)
+        )
+    elif min_price is not None:
+        main.cursor.execute(
+            "SELECT * FROM drinks WHERE price >= %s",
+            (min_price,)
+        )
+    elif max_price is not None:
+        main.cursor.execute(
+            "SELECT * FROM drinks WHERE price <= %s",
+            (max_price,)
+        )
+    else:
+        main.cursor.execute("SELECT * FROM drinks")
+
     drinks = main.cursor.fetchall()
     return drinks
 
 
-@home_page_router.get("/api/home_page/filter/drinks/by/price/{min_price}")
-def filter_drinks_by_max_price(min_price: float):
-    main.cursor.execute("SELECT * FROM drinks WHERE price >= %s",
-                        (min_price,))
-    drinks = main.cursor.fetchall()
-    return drinks
-
-
-
-#TODO PRICE  LIMIT DRINKS  write in one function both min_price,max_price
-
+#TODO PRICE  LIMIT DRINKS  write in one function both min_price,max_price  +
 #TODO user forgot password (not log in)
 #TODO user password recovery (log in)
