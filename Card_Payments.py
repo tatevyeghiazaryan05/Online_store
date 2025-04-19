@@ -32,3 +32,6 @@ def card_payment_success():
 @card_payments_router.get("/api/payments/card/payment-fail")
 def card_payment_fail():
     pass
+
+
+#todo end payments

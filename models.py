@@ -2,6 +2,7 @@ from database import Base
 from sqlalchemy import Column, Integer, String, TIMESTAMP, Float, text
 from sqlalchemy import ForeignKey
 
+
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, nullable=False, primary_key=True)
@@ -41,7 +42,3 @@ class CardPayments(Base):
     status = Column(String, nullable=False, server_default='pending')
     created_at = Column(TIMESTAMP, nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP, nullable=True)
-
-
-
-

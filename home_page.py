@@ -5,26 +5,31 @@ from security import get_current_user, pwd_context
 home_page_router = APIRouter()
 
 
-@home_page_router.get("/api/home_page/get/drinks")  #TODO write using limit
+@home_page_router.get("/api/home_page/get/drinks")  #TODO write using limit +
 def main_page():
-    main.cursor.execute("SELECT * FROM drinks WHERE kind = 'alcoholic'")
+    main.cursor.execute("SELECT * FROM drinks WHERE kind = 'alcoholic' LIMIT 5")
     alcoholic = main.cursor.fetchall()
 
-    main.cursor.execute("SELECT * FROM drinks WHERE kind = 'nonalcoholic'")
+    main.cursor.execute("SELECT * FROM drinks WHERE kind = 'nonalcoholic' LIMIT 5")
     nonalcoholic = main.cursor.fetchall()
 
-    alcoholic_part = alcoholic[:5]
-    nonalcoholic_part = nonalcoholic[:5]
+    current_total = len(alcoholic) + len(nonalcoholic)
 
-    if len(alcoholic_part) < 5:
-        nonalcoholic_extra = nonalcoholic[5:]
-        nonalcoholic_part += nonalcoholic_extra[:10-len(alcoholic)+1]
-    elif len(nonalcoholic_part) < 5:
-        alcoholic_extra = alcoholic[5:]
-        alcoholic_part += alcoholic_extra[:10-len(nonalcoholic)+1]
+    if len(alcoholic) < 5:
+        main.cursor.execute(
+            "SELECT * FROM drinks WHERE kind = 'nonalcoholic' LIMIT %s OFFSET %s",
+            (10-current_total, len(nonalcoholic))
+        )
+        nonalcoholic += main.cursor.fetchall()
+    elif len(nonalcoholic) < 5:
+        main.cursor.execute(
+            "SELECT * FROM drinks WHERE kind = 'alcoholic' LIMIT %s OFFSET %s",
+            (10 - nonalcoholic, len(alcoholic))
+        )
+        alcoholic += main.cursor.fetchall()
 
-    combined = alcoholic_part + nonalcoholic_part
-    return combined
+    result = nonalcoholic + alcoholic
+    return result
 
 
 @home_page_router.get("/api/home_page/filter/drinks/alcoholic")
