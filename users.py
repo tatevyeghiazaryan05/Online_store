@@ -1,9 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 import main
-from schemas import UserNameChangeSchema, UserPasswordChangeSchema
+from schemas import UserNameChangeSchema, UserPasswordChangeSchema, AdminPasswordRecoverSchema
 from security import get_current_user, pwd_context
 from pydantic import EmailStr
 from email_service import send_verification_email
+from datetime import datetime, timedelta
+from models import ForgotPasswordCode
 
 
 
@@ -40,9 +42,9 @@ def get_user_my_account_info(token=Depends(get_current_user)):
 
 
 @user_router.get("/api/users/for/forgot/password/code/{email}")
-def user_forgot_password(email: EmailStr):
+def user_forgot_password_code(email: EmailStr):
     try:
-        main.cursor.execute("SELECT * FROM admins WHERE email=%s",
+        main.cursor.execute("SELECT * FROM users WHERE email=%s",
                             (email,))
         user = main.cursor.fetchone()
     except Exception:
@@ -62,6 +64,53 @@ def user_forgot_password(email: EmailStr):
                         (verification_code, email))
 
     main.conn.commit()
+
+
+@user_router.post("/api/users/user forgot password")
+def user_forgot_password(data: AdminPasswordRecoverSchema):
+    code = data.code
+
+    new_password = pwd_context.hash(data.new_password)
+
+    try:
+        main.cursor.execute("SELECT * FROM forgotpasswordcode WHERE code=%s",
+                        (code,))
+        data = main.cursor.fetchone()
+
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="server error"
+        )
+
+    if not data:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Code is incorrect!"
+
+        )
+
+    data = dict(data)
+    created_at = data.get("created_at")
+    expiration_time = created_at + timedelta(minutes=15)
+    if datetime.now() > expiration_time:
+        main.cursor.execute("DELETE FROM forgotpasswordcode WHERE code=%s", (code,))
+        main.conn.commit()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Code has expired after 15 minutes."
+        )
+
+    main.cursor.execute("UPDATE users SET password =%s WHERE email=%s",
+                        (new_password, data["email"]))
+
+    main.conn.commit()
+
+    main.cursor.execute("DELETE FROM forgotpasswordcode WHERE code = %s",
+                        (code,))
+    main.conn.commit()
+    return "Change password successfully!!"
+
 
 
 #TODO user forgot password (not log in)

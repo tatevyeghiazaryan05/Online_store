@@ -18,3 +18,8 @@ class UserNameChangeSchema(BaseModel):
 
 class UserPasswordChangeSchema(BaseModel):
     password: str
+
+
+class AdminPasswordRecoverSchema(BaseModel):
+    code: str
+    new_password: str

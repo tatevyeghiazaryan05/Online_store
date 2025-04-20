@@ -7,7 +7,6 @@ from auth import authrouter
 from users import user_router
 from home_page import home_page_router
 from Card_Payments import card_payments_router
-from fastapi.staticfiles import StaticFiles
 
 
 Base.metadata.create_all(bind=engine)
