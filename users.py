@@ -66,7 +66,7 @@ def user_forgot_password_code(email: EmailStr):
     main.conn.commit()
 
 
-@user_router.post("/api/users/user forgot password")
+@user_router.post("/api/users/user/forgot/password")
 def user_forgot_password(data: AdminPasswordRecoverSchema):
     code = data.code
 
@@ -112,6 +112,15 @@ def user_forgot_password(data: AdminPasswordRecoverSchema):
     return "Change password successfully!!"
 
 
+@user_router.put("/api/users/user/password/recovery")
+def password_recovery(data: UserPasswordChangeSchema, token=Depends(get_current_user)):
+    user_id = token["id"]
+    new_password = pwd_context.hash(data.password)
+    main.cursor.execute("UPDATE users SET password =%s WHERE id=%s",
+                        (new_password, user_id))
+    main.conn.commit()
+    return "New password updated successfully!!"
 
-#TODO user forgot password (not log in)
-#TODO user password recovery (log in)
+
+#TODO user forgot password (not log in) +
+#TODO user password recovery (log in) +
