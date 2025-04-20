@@ -78,6 +78,8 @@ def filter_drinks_by_price(min_price: float = None, max_price: float = None):
     return drinks
 
 
+
+
+
 #TODO PRICE  LIMIT DRINKS  write in one function both min_price,max_price  +
-#TODO user forgot password (not log in)
-#TODO user password recovery (log in)
+

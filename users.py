@@ -1,7 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 import main
 from schemas import UserNameChangeSchema, UserPasswordChangeSchema
 from security import get_current_user, pwd_context
+from pydantic import EmailStr
+from email_service import send_verification_email
+
 
 
 user_router = APIRouter()
@@ -34,3 +37,32 @@ def get_user_my_account_info(token=Depends(get_current_user)):
                         (user_id,))
     data = main.cursor.fetchall()
     return data
+
+
+@user_router.get("/api/users/for/forgot/password/code/{email}")
+def user_forgot_password(email: EmailStr):
+    try:
+        main.cursor.execute("SELECT * FROM admins WHERE email=%s",
+                            (email,))
+        user = main.cursor.fetchone()
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="server error"
+        )
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="not such user!"
+
+        )
+    verification_code = send_verification_email(email)
+    main.cursor.execute("INSERT INTO forgotpasswordcode (code,email) VALUES(%s,%s)",
+                        (verification_code, email))
+
+    main.conn.commit()
+
+
+#TODO user forgot password (not log in)
+#TODO user password recovery (log in)
