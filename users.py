@@ -8,7 +8,6 @@ from datetime import datetime, timedelta
 from models import ForgotPasswordCode
 
 
-
 user_router = APIRouter()
 
 
