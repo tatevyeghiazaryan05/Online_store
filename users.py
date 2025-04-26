@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 import main
-from schemas import UserNameChangeSchema, UserPasswordChangeSchema, AdminPasswordRecoverSchema
+from schemas import UserNameChangeSchema, UserPasswordChangeSchema, AdminPasswordRecoverSchema, UserFeedbackSchema
 from security import get_current_user, pwd_context
 from pydantic import EmailStr
 from email_service import send_verification_email
@@ -121,5 +121,15 @@ def password_recovery(data: UserPasswordChangeSchema, token=Depends(get_current_
     return "New password updated successfully!!"
 
 
-#TODO user forgot password (not log in) +
-#TODO user password recovery (log in) +
+@user_router.post("/api/users/feedback")
+def user_feedback(feedback_data: UserFeedbackSchema):
+    user_id = feedback_data.user_id
+    comment = feedback_data.comment
+    rating = feedback_data.rating
+
+    main.cursor.execute("INSERT INTO feedback (user_id,comment,rating) VALUES (%s,%s,%s)",
+                        (user_id, comment, rating))
+    main.conn.commit()
+
+    return "Feedback added successfully!!"
+
