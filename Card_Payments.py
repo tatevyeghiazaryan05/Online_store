@@ -11,10 +11,10 @@ card_payments_router = APIRouter()
 @card_payments_router.post("/api/payments/card/payment-start")
 def card_payment_start(payments_data: PaymentInitialization, token=Depends(get_current_user)):
     user_id = token["id"]
-    main.cursor.execute("INSERT INTO cardpayments (user_id,amount) VALUES (%s,%s)",
-                        (user_id, payments_data.amount))
+    main.cursor.execute("INSERT INTO cardpayments (order_id,user_id,amount) VALUES (%s,%s,%s)",
+                        (payments_data.order_id, user_id, payments_data.amount))
     main.conn.commit()
-    link_URL= (f"https//bank.ameria.com/payments/cart_payment/init?amount={payments_data.amount}&user_name={payments_data.user_name}"
+    link_URL= (f"https://bank.ameria.com/payments/cart_payment/init?amount={payments_data.amount}&user_name={payments_data.user_name}"
                f"&card_numbers={payments_data.card_number}&expiration_date={str(payments_data.expiration_date)}&card_cvv={payments_data.card_cvv}")
 
     return link_URL

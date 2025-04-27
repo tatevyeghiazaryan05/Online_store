@@ -66,19 +66,11 @@ class Orders(Base):
     __tablename__ = "orders"
     id = Column(Integer, nullable=False, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    total_price = Column(Float, nullable=False)
-    status = Column(String, nullable=False, server_default='pending')
-    created_at = Column(TIMESTAMP, nullable=False, server_default=text("now()"))
-    updated_at = Column(TIMESTAMP, nullable=True)
-
-
-class OrderItems(Base):
-    __tablename__ = "order_items"
-    id = Column(Integer, nullable=False, primary_key=True)
-    order_id = Column(Integer, ForeignKey("orders.id"), nullable=False)
     drink_id = Column(Integer, ForeignKey("drinks.id"), nullable=False)
     quantity = Column(Integer, nullable=False)
-    price = Column(Float, nullable=False)
+    total_price = Column(Float, nullable=False)
+    shipping_address = Column(String, nullable=False)
+    created_at = Column(TIMESTAMP, nullable=False, server_default=text("now()"))
 
 
 class Feedback(Base):
@@ -91,9 +83,8 @@ class Feedback(Base):
     created_at = Column(TIMESTAMP, nullable=False, server_default=text("now()"))
 
 
-
-#TODO CREATE ORDERS TABLE
-#todo users feedback +
-#todo customer will say what he/she wants to buy and count
-#todo customers will see total amount
-#todo when product was payed an notification must send to admin and admin will see it
+#todo orders write in admins project-
+#todo customers will see total amount day,month,year-
+#todo when product was payed an notification must send to admin and admin will see it-
+#todo create notification table -
+#todo get notification api -

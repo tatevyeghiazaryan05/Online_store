@@ -23,3 +23,10 @@ class UserPasswordChangeSchema(BaseModel):
 class AdminPasswordRecoverSchema(BaseModel):
     code: str
     new_password: str
+
+
+class UserFeedbackSchema(BaseModel):
+    user_id: int
+    comment: str
+    rating: int
+

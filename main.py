@@ -7,6 +7,8 @@ from auth import authrouter
 from users import user_router
 from home_page import home_page_router
 from Card_Payments import card_payments_router
+from Orders import  ordersrouter
+
 
 
 Base.metadata.create_all(bind=engine)
@@ -29,3 +31,4 @@ app.include_router(authrouter)
 app.include_router(user_router)
 app.include_router(home_page_router)
 app.include_router(card_payments_router)
+app.include_router(ordersrouter)
