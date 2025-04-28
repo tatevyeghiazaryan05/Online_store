@@ -84,7 +84,7 @@ class Feedback(Base):
 
 
 #todo orders write in admins project+
-#todo customers will see total amount day,month,year-
+#todo customers will see total amount day,month,year+
 #todo when product was payed an notification must send to admin and admin will see it-
 #todo create notification table -
 #todo get notification api -

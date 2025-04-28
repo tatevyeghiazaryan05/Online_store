@@ -133,3 +133,28 @@ def user_feedback(feedback_data: UserFeedbackSchema):
 
     return "Feedback added successfully!!"
 
+
+@user_router.get("/api/users/get/today's/orders/total/price/{user_id}")
+def get_today_orders_total_price(user_id: int):
+    today = datetime.today().date()
+    main.cursor.execute("SELECT SUM(total_price) FROM orders WHERE user_id = %s AND DATE(created_at) = %s",
+                        (user_id, today))
+    total_price = main.cursor.fetchone()
+    return total_price
+
+
+@user_router.get("/api/users/get/month/orders/total/price/{user_id}/{month_in_number}/{year}")
+def get_month_orders_total_price(user_id: int, month_in_number: int, year: int):
+    main.cursor.execute("SELECT SUM(total_price) FROM orders WHERE user_id = %s AND EXTRACT(MONTH FROM created_at)=%s "
+                        "AND EXTRACT(YEAR FROM created_at) = %s",
+                        (user_id, month_in_number, year))
+    total_price = main.cursor.fetchone()
+    return total_price
+
+
+@user_router.get("/api/users/get/year/orders/total/price/{user_id}/{year}")
+def get_year_orders_total_price(user_id: int,year: int):
+    main.cursor.execute("SELECT SUM(total_price) FROM orders WHERE user_id = %s AND EXTRACT(YEAR FROM created_at) = %s",
+                        (user_id, year))
+    total_price = main.cursor.fetchone()
+    return total_price
