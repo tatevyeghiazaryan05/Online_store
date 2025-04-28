@@ -1,5 +1,5 @@
 from fastapi import FastAPI, APIRouter, Depends
-from Orders_schema import UserOrdersSchema, GetOrdersByDateSchema, GetOrdersByPriceSchema
+from Orders_schema import UserOrdersSchema
 from security import get_current_user
 import main
 from fastapi.exceptions import HTTPException
@@ -29,28 +29,3 @@ def user_order(order_data: UserOrdersSchema, token=Depends(get_current_user)):
     main.conn.commit()
 
     return "Order created successfully"
-
-
-@ordersrouter.get("/api/orders/get/by/id/{order_id}")
-def get_orders(order_id: int):
-    main.cursor.execute("SELECT * FROM orders WHERE id=%s",
-                        (order_id,))
-
-
-@ordersrouter.get("/api/orders/get/by/date/{start_date}/{end_date}")
-def get_order_by_date(start_date: datetime.date, end_date: datetime.date):
-
-    main.cursor.execute("SELECT * FROM orders WHERE created_at >= %s AND created_at <= %s",
-                        (start_date, end_date))
-    orders = main.cursor.fetchall()
-
-    return orders
-
-
-@ordersrouter.get("/api/orders/get/by/price/{min_price}/{max_price}")
-def get_order_by_date(min_price: float,  max_price: float):
-    main.cursor.execute("SELECT * FROM orders WHERE total_price >= %s AND total_price <= %s",
-                        (min_price, max_price))
-    orders = main.cursor.fetchall()
-
-    return orders

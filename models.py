@@ -83,7 +83,7 @@ class Feedback(Base):
     created_at = Column(TIMESTAMP, nullable=False, server_default=text("now()"))
 
 
-#todo orders write in admins project-
+#todo orders write in admins project+
 #todo customers will see total amount day,month,year-
 #todo when product was payed an notification must send to admin and admin will see it-
 #todo create notification table -
