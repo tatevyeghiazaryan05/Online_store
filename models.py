@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy import Column, Integer, String, TIMESTAMP, Float, text
+from sqlalchemy import Column, Integer, String, TIMESTAMP, Float, text, Boolean
 from sqlalchemy import ForeignKey
 
 
@@ -83,8 +83,18 @@ class Feedback(Base):
     created_at = Column(TIMESTAMP, nullable=False, server_default=text("now()"))
 
 
+class Notification(Base):
+    __tablename__ = "notifications"
+
+    id = Column(Integer, nullable=False, primary_key=True)
+    message = Column(String, nullable=False)
+    is_read = Column(Boolean, nullable=False, default=False)
+    created_at = Column(TIMESTAMP, nullable=False, server_default=text("now()"))
+
+
 #todo orders write in admins project+
 #todo customers will see total amount day,month,year+
-#todo when product was payed an notification must send to admin and admin will see it-
-#todo create notification table -
-#todo get notification api -
+#todo when product was payed an notification must send to admin and admin will see it+
+#todo create notification table +
+#todo get notification api
+
