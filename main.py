@@ -11,7 +11,6 @@ from Orders import  ordersrouter
 
 
 
-Base.metadata.create_all(bind=engine)
 
 conn = psycopg2.connect(
     host="localhost",
